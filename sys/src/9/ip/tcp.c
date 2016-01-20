@@ -128,6 +128,7 @@ struct Tcp4hdr
 	uchar	tcplen[2];
 	uchar	tcpsrc[4];
 	uchar	tcpdst[4];
+	/* same as v6 from here on */
 	uchar	tcpsport[2];
 	uchar	tcpdport[2];
 	uchar	tcpseq[4];
@@ -149,6 +150,7 @@ struct Tcp6hdr
 	uchar	ttl;
 	uchar	tcpsrc[IPaddrlen];
 	uchar	tcpdst[IPaddrlen];
+	/* same as v4 from here on */
 	uchar	tcpsport[2];
 	uchar	tcpdport[2];
 	uchar	tcpseq[4];
@@ -2347,8 +2349,9 @@ reset:
 			if(tcb->state == Established) {
 				tpriv->stats[EstabResets]++;
 				if(tcb->rcv.nxt != seg.seq)
-					print("out of order RST rcvd: %I.%d -> "
-						"%I.%d, rcv.nxt %lux seq %lux\n",
+					netlog(f, Logtcp, "out of order RST "
+						"rcvd: %I.%d -> %I.%d, rcv.nxt "
+						"%lux seq %lux\n",
 						s->raddr, s->rport, s->laddr,
 						s->lport, tcb->rcv.nxt, seg.seq);
 			}
